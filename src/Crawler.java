@@ -13,6 +13,7 @@ import java.util.Queue;
 public class Crawler {
 
     private int maxCrawlDepth;
+    private final int MAX_QUEUE_LENGTH = 100000;
     private String[] urls;
 
     private HashMap<String, WebPage> webPages;
@@ -54,7 +55,8 @@ public class Crawler {
 
             webPages.put(webPage.getUrl(), webPage);
 
-            if (webPage.getCurrentDepth() < maxCrawlDepth) {
+            // Don't want to go too far and don't want to have a huge queue
+            if (webPage.getCurrentDepth() < maxCrawlDepth && bfs.size() < MAX_QUEUE_LENGTH) {
                 Elements links = webPage.getLinks();
                 for (Element link : links) {
                     String href = link.attr("href");
@@ -70,8 +72,6 @@ public class Crawler {
                         bfs.add(newPage);
                 }
             }
-            System.out.println("Queue Size = " + bfs.size());
-
         }
 
 //            for (Element link : links) {
